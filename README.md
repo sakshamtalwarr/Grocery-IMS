@@ -139,6 +139,8 @@ Follow these steps to set up and run the project on a local machine.
 
 - **Admin**: `admin` / `admin123`
 - **Employee**: `employee` / `employee123`
+- - **Employee**: `SakshamTalwar` / `123456`
+  - or just register for new user!
 
 ---
 
