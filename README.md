@@ -4,6 +4,9 @@ A comprehensive, dual-portal web application for managing grocery store inventor
 
 **Project by: Saksham Talwar**
 
+> This project was developed as the final course-end project for the **Anudip Foundation**.  
+> **Batch Code:** ANP-D0458
+
 ---
 
 ## 📖 Table of Contents
