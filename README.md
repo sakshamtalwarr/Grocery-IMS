@@ -10,6 +10,7 @@ A comprehensive, dual-portal web application for managing grocery store inventor
 
 - [Project Overview](#-project-overview)
 - [Key Features](#-key-features)
+- [Project Images](#-project-images)
 - [Technology Stack](#-technology-stack)
 - [Setup and Installation](#-setup-and-installation)
 - [How to Run](#-how-to-run)
@@ -50,21 +51,39 @@ The system features two distinct user roles, each with a dedicated portal:
 
 ---
 
+## 📸 Project Images
 
-## 📸Project Images
-/ProjectImages/1WelcomeScreen.png
-/ProjectImages/2EmployeeLogin.png
-/ProjectImages/2EmployeePortal.png
-/ProjectImages/2EMP_GenerateBill.png
-/ProjectImages/2EMP_UpadteProfileDetails.png
-/ProjectImages/2EMP_UpdateProductStocks.png
-/ProjectImages/2EMP_ViewProducts.png
-/ProjectImages/3Admin_AddNewEmp.png
-/ProjectImages/3Admin_EmpManagement.png
-/ProjectImages/3Admin_ExportCSV.png
-/ProjectImages/3Admin_Login.png
-/ProjectImages/3Admin_ManageCategories.png
-/ProjectImages/4UserRegistration.png
+### 1. Welcome Screen & User Registration
+<img src="ProjectImages/1WelcomeScreen.png" alt="Welcome Screen" width="700"/>
+<img src="ProjectImages/4UserRegistration.png" alt="New User Registration" width="700"/>
+
+---
+### 2. Employee Portal
+The employee portal allows staff to manage sales, products, and their own profiles.
+
+| Employee Login | Employee Portal |
+| :---: | :---: |
+| <img src="ProjectImages/2EmployeeLogin.png" alt="Employee Login" width="400"/> | <img src="ProjectImages/2EmployeePortal.png" alt="Employee Portal" width="400"/> |
+
+**Employee Functions:**
+- **Generate Bill:** <img src="ProjectImages/2EMP_GenerateBill.png" alt="Generate Bill" width="700"/>
+- **View Products & Update Stock:** <img src="ProjectImages/2EMP_ViewProducts.png" alt="View Products" width="400"/> <img src="ProjectImages/2EMP_UpdateProductStocks.png" alt="Update Stocks" width="400"/>
+- **Update Profile Details:** <img src="ProjectImages/2EMP_UpadteProfileDetails.png" alt="Update Profile" width="700"/>
+
+---
+### 3. Admin Portal
+The admin portal provides full control over employees, product categories, and data management.
+
+| Admin Login | Employee Management |
+| :---: | :---: |
+| <img src="ProjectImages/3Admin_Login.png" alt="Admin Login" width="400"/> | <img src="ProjectImages/3Admin_EmpManagement.png" alt="Employee Management" width="400"/> |
+
+**Admin Functions:**
+- **Add New Employee:** <img src="ProjectImages/3Admin_AddNewEmp.png" alt="Add New Employee" width="700"/>
+- **Manage Categories:** <img src="ProjectImages/3Admin_ManageCategories.png" alt="Manage Categories" width="700"/>
+- **Export Data to CSV:** <img src="ProjectImages/3Admin_ExportCSV.png" alt="Export to CSV" width="700"/>
+
+---
 
 ## 💻 Technology Stack
 
@@ -74,9 +93,9 @@ The system features two distinct user roles, each with a dedicated portal:
 - **Web Server**: Apache Tomcat 10.1
 - **Java Version**: JDK 11 or newer
 - **Libraries**:
-  - **Gson**: For converting Java objects to JSON for API communication.
-  - **Chart.js**: For rendering dynamic charts on the dashboards.
-  - **Font Awesome**: For icons.
+  - **Gson**: For converting Java objects to JSON for API communication.
+  - **Chart.js**: For rendering dynamic charts on the dashboards.
+  - **Font Awesome**: For icons.
 
 ---
 
@@ -86,32 +105,32 @@ Follow these steps to set up and run the project on a local machine.
 
 ### Prerequisites
 
-1.  **Java Development Kit (JDK)**: Version 11 or higher.
-2.  **Apache Tomcat**: Version 10.1.
-3.  **MySQL Server & MySQL Workbench**.
-4.  **Eclipse IDE for Enterprise Java and Web Developers**.
-5.  **MySQL Connector/J**: The JDBC driver `.jar` file.
+1.  **Java Development Kit (JDK)**: Version 11 or higher.
+2.  **Apache Tomcat**: Version 10.1.
+3.  **MySQL Server & MySQL Workbench**.
+4.  **Eclipse IDE for Enterprise Java and Web Developers**.
+5.  **MySQL Connector/J**: The JDBC driver `.jar` file.
 
 ### Step 1: Database Setup
 
-1.  Open MySQL Workbench and connect to your local database server.
-2.  Open the `setup.sql` file provided with this project.
-3.  Execute the entire script. This will create the `inventory_management` database, all necessary tables, and insert sample data.
+1.  Open MySQL Workbench and connect to your local database server.
+2.  Open the `setup.sql` file provided with this project.
+3.  Execute the entire script. This will create the `inventory_management` database, all necessary tables, and insert sample data.
 
 ### Step 2: Configure Eclipse Project
 
-1.  Import the project into your Eclipse workspace (`File > Import > General > Existing Projects into Workspace`).
-2.  Add the Tomcat 10.1 server to your Eclipse IDE via the "Servers" tab.
-3.  Add the MySQL Connector/J `.jar` file to the project's build path (`Right-click project > Build Path > Configure Build Path > Libraries > Add External JARs...`).
-4.  Open the `src/main/java/com/ims/util/DatabaseConnectionUtil.java` file and update the `JDBC_USERNAME` and `JDBC_PASSWORD` variables to match your MySQL credentials.
+1.  Import the project into your Eclipse workspace (`File > Import > General > Existing Projects into Workspace`).
+2.  Add the Tomcat 10.1 server to your Eclipse IDE via the "Servers" tab.
+3.  Add the MySQL Connector/J `.jar` file to the project's build path (`Right-click project > Build Path > Configure Build Path > Libraries > Add External JARs...`).
+4.  Open the `src/main/java/com/ims/util/DatabaseConnectionUtil.java` file and update the `JDBC_USERNAME` and `JDBC_PASSWORD` variables to match your MySQL credentials.
 
 ---
 
 ## ▶️ How to Run
 
-1.  **Clean the Project**: In Eclipse, go to `Project > Clean...` and clean your project.
-2.  **Run on Server**: Right-click on the project in the Project Explorer, select **Run As > Run on Server**, and choose your configured Tomcat server.
-3.  **Access the Application**: The application will open in a browser at `http://localhost:8080/InventoryManagementSystem/`.
+1.  **Clean the Project**: In Eclipse, go to `Project > Clean...` and clean your project.
+2.  **Run on Server**: Right-click on the project in the Project Explorer, select **Run As > Run on Server**, and choose your configured Tomcat server.
+3.  **Access the Application**: The application will open in a browser at `http://localhost:8080/InventoryManagementSystem/`.
 
 **Default Login Credentials:**
 
@@ -124,6 +143,6 @@ Follow these steps to set up and run the project on a local machine.
 
 To run this project without an IDE, you can create a `.war` file and deploy it to any Tomcat server.
 
-1.  **Export from Eclipse**: Right-click the project, select **Export > WAR file**, and save the `InventoryManagementSystem.war` file to your computer.
-2.  **Deploy to Tomcat**: Copy this `.war` file into the `webapps` directory of your Tomcat installation.
-3.  **Run**: Start the Tomcat server. The application will be available at `http://localhost:8080/InventoryManagementSystem/`.
+1.  **Export from Eclipse**: Right-click the project, select **Export > WAR file**, and save the `InventoryManagementSystem.war` file to your computer.
+2.  **Deploy to Tomcat**: Copy this `.war` file into the `webapps` directory of your Tomcat installation.
+3.  **Run**: Start the Tomcat server. The application will be available at `http://localhost:8080/InventoryManagementSystem/`.
