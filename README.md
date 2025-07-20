@@ -52,6 +52,19 @@ The system features two distinct user roles, each with a dedicated portal:
 
 
 ## 📸Project Images
+/ProjectImages/1WelcomeScreen.png
+/ProjectImages/2EmployeeLogin.png
+/ProjectImages/2EmployeePortal.png
+/ProjectImages/2EMP_GenerateBill.png
+/ProjectImages/2EMP_UpadteProfileDetails.png
+/ProjectImages/2EMP_UpdateProductStocks.png
+/ProjectImages/2EMP_ViewProducts.png
+/ProjectImages/3Admin_AddNewEmp.png
+/ProjectImages/3Admin_EmpManagement.png
+/ProjectImages/3Admin_ExportCSV.png
+/ProjectImages/3Admin_Login.png
+/ProjectImages/3Admin_ManageCategories.png
+/ProjectImages/4UserRegistration.png
 
 ## 💻 Technology Stack
 
