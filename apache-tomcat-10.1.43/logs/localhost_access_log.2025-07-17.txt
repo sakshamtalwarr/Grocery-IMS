@@ -1,0 +1,10 @@
+0:0:0:0:0:0:0:1 - - [17/Jul/2025:23:18:51 +0530] "GET /InventoryManagementSystem/index.html HTTP/1.1" 200 15856
+0:0:0:0:0:0:0:1 - - [17/Jul/2025:23:18:55 +0530] "GET /InventoryManagementSystem/RegisterEmployee.html HTTP/1.1" 200 14147
+0:0:0:0:0:0:0:1 - - [17/Jul/2025:23:19:07 +0530] "POST /InventoryManagementSystem/RegisterServlet HTTP/1.1" 500 3441
+0:0:0:0:0:0:0:1 - - [17/Jul/2025:23:19:24 +0530] "GET /InventoryManagementSystem/Adminlogin.html HTTP/1.1" 200 15575
+0:0:0:0:0:0:0:1 - - [17/Jul/2025:23:19:28 +0530] "POST /InventoryManagementSystem/LoginServlet HTTP/1.1" 500 3432
+0:0:0:0:0:0:0:1 - - [17/Jul/2025:23:31:17 +0530] "GET /InventoryManagementSystem/RegisterEmployee.html HTTP/1.1" 404 803
+0:0:0:0:0:0:0:1 - - [17/Jul/2025:23:31:51 +0530] "GET /InventoryManagementSystem/Adminlogin.html HTTP/1.1" 404 797
+0:0:0:0:0:0:0:1 - - [17/Jul/2025:23:56:03 +0530] "GET /InventoryManagementSystem/Adminlogin.html HTTP/1.1" 404 797
+0:0:0:0:0:0:0:1 - - [17/Jul/2025:23:56:16 +0530] "GET /InventoryManagementSystem/Adminlogin.html HTTP/1.1" 404 797
+0:0:0:0:0:0:0:1 - - [17/Jul/2025:23:56:16 +0530] "GET /favicon.ico HTTP/1.1" 304 -
