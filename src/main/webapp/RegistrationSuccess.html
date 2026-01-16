@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration Successful</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            height: 100vh;
+            background: linear-gradient(-45deg, #77b7e8, #498dc5);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .success-container {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 50px;
+            width: 450px;
+            box-shadow: 0 0 20px rgba(248, 248, 248, 0.3);
+            backdrop-filter: blur(12px);
+            text-align: center;
+        }
+        h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        .checkmark {
+            font-size: 60px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+        }
+        #countdown {
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="success-container">
+    <div class="checkmark">&#10004;</div>
+    <h2>Registration Successful!</h2>
+    <p>Your account has been created.</p>
+    <p>You will be redirected to the login page in <span id="countdown">5</span> seconds...</p>
+</div>
+
+<script>
+    let countdown = 5;
+    const countdownElement = document.getElementById('countdown');
+
+    const timer = setInterval(() => {
+        countdown--;
+        countdownElement.textContent = countdown;
+        if (countdown <= 0) {
+            clearInterval(timer);
+            window.location.href = 'EmployeeLogin.html';
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grocery Inventory Management System</title>
+    <style type="text/css">body { cursor: url('data:image/x-icon;base64,AAACAAEAICAAAAAAAACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADhEaLQAABrYAAAT9AAAB/AAAAf0AAAL8AQEE/AUDCLYpJywLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwIG/wAAAP4AAAD/AgEC/wIBAv8CAQL/BAIE/wEAAf8BAAH/AQAA/wAAAP8AAAH9DgwTkRgXHwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASEBoCAAAF/QAAAP8BAAH/AgEC/318ff/8/Pz//Pv8//38/P/+/v7//v7+//z8/f/8/Pz/Ojg5/wEAAf8BAAH/AgAF/gUFCgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwsYAgIBA/4CAQL/DAwM//79/v///f///////////////////////////////////////////////v///Pv8/2hmaP8BAAH/AAAF/xcYImIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoIFSEBAAL+AQAB//Px8v///v7///////////////////////////////////////////////////////////////////////v7+/8BAAH/AQAC/wwNFDMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJBxEFAQAD/gEBAf/+/v7///7///////////////////////////////////////////////////////////////////////////////7+//38/f8BAQH/AQAB/gwOFQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/4CAQP/9fX1///+/////////////////////////////////////////////////////////////////////////////////////////v7+/+jn6P8CAQL/AAAC+wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWFSQkAAAC/xYVFv/8+/z///////////////////////////////////////////////////////////////////////////////////////////////////7//wAAAP8BAAP/Wl1nLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAv0AAAD//fz9/////////////////////////////////////////////////////////////////////////////////////////////////////////////Pv8/wAAAP8DAgf+AAAAAAAAAAAAAAAAAAAAAAAAAAAZGCcHAQAD/wEBAf/+/v7////////////////////////////////////////////////////////////////////////////////////////////////////////////9/P3/AQAB/wEAAf0AAAAAAAAAAAAAAAAAAAAAAAAAAAAACP4BAAD/8O/w//////////////////////////////////////////////////////////////////////////////////////////////////////////////////7+/v8CAQL/AgEC/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/gAAAP/+/f7////////////+//7//////////////////////////////////////////////////////////////////////////////////////////////////v/+/wIBAf8CAAP/AAAAAAAAAAAAAAAAAAAAAAYJEQEAAAP/AAAA//////////////7//wkJCf+Xlpf///7//////////////////////////////////////////////////////////////////////////////////////////v//AAAA/wEAA/8AAAAAAAAAAAAAAAAAAAAADxQqTgEBAv/Qz9D////////////9+/3/AgEC/zY1Nv////////7///////////////////////////////////////////////////////////////////////////////////7+/v8BAAH/AQAC/wAAAAAAAAAAAAAAAAAAAAABAhDAAAAA//7+/v////////////7+/v8EAwT/R0ZH//////////////////////////////////////////////////////////////////////////////////////////////7//wAAAP8CAQL+AAAAAAAAAAAAAAAAAAAAAAAACPwAAAD//v7+/////////////f39/wIBAv9TUVP//v3+//////////////////7//v/+//////////////////////////////////////////79/v8AAAD/z83P///////+/v7/AAAA/wIAAf4AAAAAAAAAAAAAAAAAAAAAAAAI/gQEBP///v/////////////9/P3/AAAA/2hnaP///v/////////////+/v7/S0pL//79/v///////////////////////v7+/////////////////wAAAP8qKir//v7+//////8BAAH/AQAB/gAAAAAAAAAAAAAAAAAAAAAAAAP9CAcH//7+/v////////////79/v8AAAD/eHd4/////////////////8rIyv8CAAH/sa+x/////////////fz9/wIBAv90c3T/////////////////AQAB/zo6Ov/+/v7//v7+/wEAAf8AAAD+AAAAAAAAAAAAAAAAAAAAAAAABv4RERH//v/+///////+//7/FBQU/wEAAf+dm5z///7/////////////xsXG/wAAAP+7urr////////////+/v7/AQAB/wEBAf////////////79/v8BAAH/ExMT//78/v/+/v7/AwID/wAAAP0AAAAAAAAAAAAAAAAAAAAAAAAI/QEBAf/+/v7//v7+/87Mzv8AAAD/AQAB/66trv/////////////////FxMX/AQAB/7q5uv////////////37/f8BAAH/AQEB///9////////9/b3/wEAAv8CAQL/U1JT/wcHB/8BAAH/AwIM8AAAAAAAAAAAAAAAAAAAAAAAAxAEAAAB/wAAAf8EAgT/AAAA/wEAAv8BAAP/xcHE/////////////////8LBwv8AAAD/s7Kz//79/v///v//+vr6/wEAAf8CAQL///3////+/v/y8PH/AQAB/wEAAf8AAAD/AQAA/wEAAf4UHCwCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIXdwAACN0AAAbHFxwwCgEAAf/m5Ob/////////////////w8HC/wEAAf+zsbP///7////+///+/v7/AAAA/wEAAf///v///////wIBAv8AAAL+DBEgZwABDuQAAQzkDQ0aJgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEy4BBQAA/+jn6P///v/////////////DwcL/AAAB/1pYWv/+/f7//v7//359fv8BAAH/AQAB/wEAAf8BAAH/AgAA/wcMHoUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABDBUFAAH/6+jq///+/////////////769vv8BAAH/AgEC/wEBAv8CAQT/AAAD/wAAAf4JDBxwAAAM9wIDCuAKEyEcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKHQUAA//w7+////7/////////////vr6+/wEAAf8AAQP9AAAD/AAAAP0AAAb2AQILAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgsYAgAG//Pz8/////////////////+joaP/AQAA/wcLDhoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCkBAAX/9/f3/////////////////6Ggof8BAAD/JSYoAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGNAEAAf/5+fn/////////////////i4qL/wEAAf8AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsbAgAA//Ly8v/+/v7///////////9ZWVn/AgAC/wUGCwIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAP+AgED//n4+f/+/v7//v7+/wUEBf8CAAD+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABG5kBAAT/AQEC/wEAAf8BAQP/AAAA/gEFDD0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIGykAARDWAAAM9QADEZ8FCRcBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//wH///gAP//gAB//wAAP/AAB/8AAAP+AAAB/gAAAfwAAAD8AAAA+AAAAPgAAAD4AAAA+AAAAPAAAADwAAAA8AAAAPAAAADwAAAA8AAAAPgAAAH+QAAT/8AAH//AAn//wAf//8B////Af///wH///8B////Af///wP////H//8='), auto; }</style>
+
+    <style>
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+          height: 100vh;
+          background: linear-gradient(-45deg, #77b7e8, #498dc5);
+          background-size: 400% 400%;
+          animation: gradientBG 20s ease infinite;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #4f1141;
+          position: relative;
+          overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .login-container {
+          background: rgba(0, 0, 0, 0.05);
+          border-radius: 15px;
+          padding: 40px;
+          width: 350px;
+          box-shadow: 0 0 20px rgba(248, 248, 248, 0.3);
+          backdrop-filter: blur(12px);
+          z-index: 1;
+          position: relative;
+        }
+         .login-container::before {
+          content: "";
+          position: absolute;
+          top: -10px;
+          left: -10px;
+          right: -10px;
+          bottom: -10px;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent 70%);
+          z-index: -1;
+          border-radius: 20px;
+          animation: ambientGlow 3s infinite alternate ease-in-out;
+       }
+        .hover-logo {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            z-index: 2;
+            display: none;
+            animation: popup 0.3s ease-out;
+        }
+
+        @keyframes popup {
+            0% { transform: translateX(-50%) scale(0); opacity: 0; }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+
+        @keyframes ambientGlow {
+          0% { box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); }
+          100% { box-shadow: 0 0 35px rgb(255, 255, 255); }
+        }
+
+        h2 {
+          text-align:center;
+          margin-bottom: 30px;
+          font-size: 26px;
+          color: #ffffff;
+        }
+
+        button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 10px;
+          border: none;
+          border-radius: 10px;
+          background-color: #000101;
+          color: #fff;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+          background-color: #e44646;
+        }
+
+        .clock {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          font-size: 18px;
+          font-weight: bold;
+          color: #f0f0f0;
+          background: rgba(255, 255, 255, 0.1);
+          padding: 8px 12px;
+          border-radius: 10px;
+          backdrop-filter: blur(5px);
+        }
+
+        .gif {
+          position: absolute;
+          bottom: 50px;
+          width: 120px;
+          height: auto;
+          background-color: #f0f0f0;
+          border-radius: 10px;
+          color: rgb(234, 15, 15);
+          padding: 10px;
+          box-shadow: 0 0 20px rgba(111, 44, 44, 0.3);
+          animation: ambientGlow 5s infinite alternate ease-in-out;
+        }
+
+        button.register {
+          background-color: #ffffff;
+          margin-top: 10px;
+          color: #000;
+        }
+
+        button.register:hover {
+          background-color: #e44646;
+        }
+        
+        /* --- DB Status Notification Styles --- */
+        .status-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 25px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            z-index: 10000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        .status-notification.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .status-notification.success {
+            background-color: #28a745;
+        }
+        .status-notification.error {
+            background-color: #dc3545;
+        }
+
+        /* --- STYLES FOR WELCOME SCREEN --- */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1c212e;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.8s ease-out 0.5s, visibility 0.8s 0.5s;
+            opacity: 1;
+            visibility: visible;
+        }
+        #welcome-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .welcome-content {
+            animation: fadeInContent 1.5s ease-out forwards;
+        }
+        .welcome-content h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+        .welcome-content p {
+            font-size: 1.5rem;
+            color: #a0a8b7;
+            margin-bottom: 2.5rem;
+        }
+        .loading-bar {
+            width: 250px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .loading-progress {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #a78bfa);
+            transform: translateX(-100%);
+            animation: loading 3s ease-out forwards;
+        }
+
+        @keyframes fadeInContent {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes loading {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0%); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Welcome Screen -->
+    <div id="welcome-screen">
+        <div class="welcome-content">
+            <h1>Welcome to Grocery Inventory Management System</h1>
+            <p>Made by Saksham Talwar</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DB Status Notification -->
+    <div id="dbStatusNotification" class="status-notification"></div>
+
+    <!-- Original Homepage Content -->
+    <img id="employeeLogo" class="hover-logo" src="https://cdn-icons-png.flaticon.com/128/6186/6186048.png" alt="Employee" />
+    <img id="adminLogo" class="hover-logo" src="https://cdn-icons-png.flaticon.com/128/9322/9322127.png" alt="Admin" />
+
+    <div class="clock" id="clock"></div>
+
+    <img src="https://undesirable-reindeer.files.svdcdn.com/production/inventory-illustration.gif?dm=1736531575" alt="gif" class="gif" />
+
+    <div class="login-container">
+        <h2>HOMEPAGE</h2>
+        <button class="loginemployee" type ="button" onclick="window.location.href='EmployeeLogin.html'">Click here to login as Employee</button>
+        <button class="loginadmin" type ="button" onclick="window.location.href='Adminlogin.html'">Click here to login as Admin</button>
+        <button class="register" type="button" onclick="window.location.href='RegisterEmployee.html'">Register</button>
+    </div>
+
+<script>
+    // --- Combined Script Logic ---
+    window.addEventListener('load', () => {
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const notification = document.getElementById('dbStatusNotification');
+
+        // This function will run after the welcome screen animation is complete
+        function checkDatabaseStatus() {
+            // We need a DbStatusServlet for this to work
+            fetch('DbStatusServlet')
+                .then(response => response.json())
+                .then(data => {
+                    notification.textContent = data.message;
+                    if (data.status === 'success') {
+                        notification.classList.add('success');
+                    } else {
+                        notification.classList.add('error');
+                    }
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 4000);
+                })
+                .catch(error => {
+                    console.error('Could not check DB status:', error);
+                    notification.textContent = 'Could not contact server.';
+                    notification.classList.add('error', 'show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 4000);
+                });
+        }
+
+        // Hide the welcome screen after 3.5 seconds
+        setTimeout(() => {
+            if (welcomeScreen) {
+                welcomeScreen.classList.add('hidden');
+            }
+            // Check the database status AFTER the welcome screen is hidden
+            checkDatabaseStatus();
+        }, 3500); 
+    });
+
+    // --- Original Clock and Hover Logic ---
+    function updateClock() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-IN', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true,
+          timeZone: 'Asia/Kolkata'
+      });
+      document.getElementById('clock').textContent = `IST: ${timeString}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    const employeeBtn = document.querySelector("button[onclick*='EmployeeLogin']");
+    const adminBtn = document.querySelector("button[onclick*='Adminlogin']");
+    const employeeLogo = document.getElementById("employeeLogo");
+    const adminLogo = document.getElementById("adminLogo");
+
+    employeeBtn.addEventListener("mouseenter", () => {
+        employeeLogo.style.display = "block";
+        adminLogo.style.display = "none";
+    });
+    employeeBtn.addEventListener("mouseleave", () => {
+        employeeLogo.style.display = "none";
+    });
+    adminBtn.addEventListener("mouseenter", () => {
+        adminLogo.style.display = "block";
+        employeeLogo.style.display = "none";
+    });
+    adminBtn.addEventListener("mouseleave", () => {
+        adminLogo.style.display = "none";
+    });
+</script>
+</body>
+</html>

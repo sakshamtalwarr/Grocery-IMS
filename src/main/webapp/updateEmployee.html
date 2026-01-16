@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Employee Details Update</title>
+   <style type="text/css">body { cursor: url('data:image/x-icon;base64,AAACAAEAICAAAAAAAACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADhEaLQAABrYAAAT9AAAB/AAAAf0AAAL8AQEE/AUDCLYpJywLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwIG/wAAAP4AAAD/AgEC/wIBAv8CAQL/BAIE/wEAAf8BAAH/AQAA/wAAAP8AAAH9DgwTkRgXHwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASEBoCAAAF/QAAAP8BAAH/AgEC/318ff/8/Pz//Pv8//38/P/+/v7//v7+//z8/f/8/Pz/Ojg5/wEAAf8BAAH/AgAF/gUFCgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwsYAgIBA/4CAQL/DAwM//79/v///f///////////////////////////////////////////////v///Pv8/2hmaP8BAAH/AAAF/xcYImIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoIFSEBAAL+AQAB//Px8v///v7///////////////////////////////////////////////////////////////////////v7+/8BAAH/AQAC/wwNFDMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJBxEFAQAD/gEBAf/+/v7///7///////////////////////////////////////////////////////////////////////////////7+//38/f8BAQH/AQAB/gwOFQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/4CAQP/9fX1///+/////////////////////////////////////////////////////////////////////////////////////////v7+/+jn6P8CAQL/AAAC+wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWFSQkAAAC/xYVFv/8+/z///////////////////////////////////////////////////////////////////////////////////////////////////7//wAAAP8BAAP/Wl1nLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAv0AAAD//fz9/////////////////////////////////////////////////////////////////////////////////////////////////////////////Pv8/wAAAP8DAgf+AAAAAAAAAAAAAAAAAAAAAAAAAAAZGCcHAQAD/wEBAf/+/v7////////////////////////////////////////////////////////////////////////////////////////////////////////////9/P3/AQAB/wEAAf0AAAAAAAAAAAAAAAAAAAAAAAAAAAAACP4BAAD/8O/w//////////////////////////////////////////////////////////////////////////////////////////////////////////////////7+/v8CAQL/AgEC/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/gAAAP/+/f7////////////+//7//////////////////////////////////////////////////////////////////////////////////////////////////v/+/wIBAf8CAAP/AAAAAAAAAAAAAAAAAAAAAAYJEQEAAAP/AAAA//////////////7//wkJCf+Xlpf///7//////////////////////////////////////////////////////////////////////////////////////////v//AAAA/wEAA/8AAAAAAAAAAAAAAAAAAAAADxQqTgEBAv/Qz9D////////////9+/3/AgEC/zY1Nv////////7///////////////////////////////////////////////////////////////////////////////////7+/v8BAAH/AQAC/wAAAAAAAAAAAAAAAAAAAAABAhDAAAAA//7+/v////////////7+/v8EAwT/R0ZH//////////////////////////////////////////////////////////////////////////////////////////////7//wAAAP8CAQL+AAAAAAAAAAAAAAAAAAAAAAAACPwAAAD//v7+/////////////f39/wIBAv9TUVP//v3+//////////////////7//v/+//////////////////////////////////////////79/v8AAAD/z83P///////+/v7/AAAA/wIAAf4AAAAAAAAAAAAAAAAAAAAAAAAI/gQEBP///v/////////////9/P3/AAAA/2hnaP///v/////////////+/v7/S0pL//79/v///////////////////////v7+/////////////////wAAAP8qKir//v7+//////8BAAH/AQAB/gAAAAAAAAAAAAAAAAAAAAAAAAP9CAcH//7+/v////////////79/v8AAAD/eHd4/////////////////8rIyv8CAAH/sa+x/////////////fz9/wIBAv90c3T/////////////////AQAB/zo6Ov/+/v7//v7+/wEAAf8AAAD+AAAAAAAAAAAAAAAAAAAAAAAABv4RERH//v/+///////+//7/FBQU/wEAAf+dm5z///7/////////////xsXG/wAAAP+7urr////////////+/v7/AQAB/wEBAf////////////79/v8BAAH/ExMT//78/v/+/v7/AwID/wAAAP0AAAAAAAAAAAAAAAAAAAAAAAAI/QEBAf/+/v7//v7+/87Mzv8AAAD/AQAB/66trv/////////////////FxMX/AQAB/7q5uv////////////37/f8BAAH/AQEB///9////////9/b3/wEAAv8CAQL/U1JT/wcHB/8BAAH/AwIM8AAAAAAAAAAAAAAAAAAAAAAAAxAEAAAB/wAAAf8EAgT/AAAA/wEAAv8BAAP/xcHE/////////////////8LBwv8AAAD/s7Kz//79/v///v//+vr6/wEAAf8CAQL///3////+/v/y8PH/AQAB/wEAAf8AAAD/AQAA/wEAAf4UHCwCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIXdwAACN0AAAbHFxwwCgEAAf/m5Ob/////////////////w8HC/wEAAf+zsbP///7////+///+/v7/AAAA/wEAAf///v///////wIBAv8AAAL+DBEgZwABDuQAAQzkDQ0aJgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEy4BBQAA/+jn6P///v/////////////DwcL/AAAB/1pYWv/+/f7//v7//359fv8BAAH/AQAB/wEAAf8BAAH/AgAA/wcMHoUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABDBUFAAH/6+jq///+/////////////769vv8BAAH/AgEC/wEBAv8CAQT/AAAD/wAAAf4JDBxwAAAM9wIDCuAKEyEcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKHQUAA//w7+////7/////////////vr6+/wEAAf8AAQP9AAAD/AAAAP0AAAb2AQILAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgsYAgAG//Pz8/////////////////+joaP/AQAA/wcLDhoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCkBAAX/9/f3/////////////////6Ggof8BAAD/JSYoAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGNAEAAf/5+fn/////////////////i4qL/wEAAf8AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsbAgAA//Ly8v/+/v7///////////9ZWVn/AgAC/wUGCwIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAP+AgED//n4+f/+/v7//v7+/wUEBf8CAAD+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABG5kBAAT/AQEC/wEAAf8BAQP/AAAA/gEFDD0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIGykAARDWAAAM9QADEZ8FCRcBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//wH///gAP//gAB//wAAP/4AAB/8AAAP+AAAB/gAAAfwAAAD8AAAA+AAAAPgAAAD4AAAA+AAAAPAAAADwAAAA8AAAAPAAAADwAAAA8AAAAPgAAAH+QAAT/8AAH//AAn//wAf//8B////Af///wH///8B////Af///wP////H//8='), auto; }</style>
+    
+  <style>
+    
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      body {
+        height: 100vh;
+        background: linear-gradient(-45deg, #77b7e8, #498dc5);
+        background-size: 400% 400%;
+        animation: gradientBG 20s ease infinite;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #4f1141;
+        position: relative;
+        overflow: hidden;
+      } 
+     @keyframes gradientBG {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+     h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 26px;
+        color: #ffffff;
+      }
+      .update-form {
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 15px;
+        padding: 40px;
+        width: 350px;
+        box-shadow: 0 0 20px rgba(24, 23, 23, 0.3);
+        backdrop-filter: blur(12px);
+        z-index: 1;
+        position: relative;
+       
+        
+      }
+      .update-form::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        background: radial-gradient(circle, rgba(249, 249, 249, 0.3), transparent 70%);
+        z-index: -1;
+        border-radius: 20px;
+        animation: ambientGlow 3s infinite alternate ease-in-out;
+      }
+      @keyframes ambientGlow {
+        0% { box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); }
+        100% { box-shadow: 0 0 35px rgb(255, 255, 255); }
+      }
+
+    .update-form {
+     background: rgba(255, 249, 249, 0.05);
+      padding: 30px;
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 0 20px rgba(243, 235, 235, 0.3);
+      backdrop-filter: blur(12px);
+      z-index: 1;
+      width: 350px;
+      box-sizing: border-box;
+    }
+    .update-form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #ffefef;
+      font-weight: bold;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .form-group button {
+      width: 100%;
+      padding: 10px;
+      background-color: #000000;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .form-group{
+      color: white;
+      font-weight: bold;
+    }
+    .clock {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #f0f0f0;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+}
+    .form-group button:hover {
+      background-color: #696565;
+
+}
+
+    .goback {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+}
+
+.goback button {
+  background-color: #f93030;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.goback button:hover {
+  background-color: #c22626;
+}
+  </style>
+</head>
+<body>
+     <div class="clock" id="clock"></div>
+       <div class="goback" id="goback" for="goback"> 
+      <button type="button" onclick="window.location.href='EmployeePortal.html'"  wait>Go Back</button></div>
+  </div>
+  <div class="update-form">
+    <h2>Employee Details Update</h2>
+    <form>
+      <div class="form-group">
+        <label for="empcode">Employee Code</label>
+        <input type="text" id="empcode" name="empcode" placeholder="Enter Employee Code" required />
+      </div>
+      <div class="form-group" > 
+        <label for="empname">Employee Name</label>
+        <input type="text" id="empname" name="empname" placeholder="Enter Employee Name"  />
+      </div>
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" placeholder="Enter Age"  />
+      </div>
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender" required>
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter Phone Number"   />
+      </div>
+            <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="password"    />
+      </div>
+      <!-- <div class="form-group">
+        <label for="salary">Salary</label>
+        <input type="number" id="salary" name="salary" placeholder="Enter Salary" required />
+      </div> -->
+
+      <div class="form-group">
+        <button type="submit">Update Details</button>
+      </div>
+
+
+   
+  
+  <script>
+      function updateClock() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        hours = String(hours).padStart(2, '0');
+        const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+        const location = Intl.DateTimeFormat().resolvedOptions().timeZone.replace("_", " ");
+        document.getElementById('clock').textContent = `${timeString} (${location})`;
+      }
+
+      function togglePasswordVisibility() {
+        const password = document.getElementById("password");
+        password.type = password.type === "password" ? "text" : "password";
+      }
+
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      setTimeout(() => {
+        const greeting = document.getElementById('greeting');
+        if (greeting) greeting.style.display = 'none';
+      }, 5000);
+    </script>
+</body>
+</html>

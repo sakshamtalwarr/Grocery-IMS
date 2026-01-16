@@ -1,0 +1,158 @@
+# Grocery Inventory Management System - Documentation
+
+Project by: Saksham Talwar ANP-D0458
+
+---
+----------------------------------------
+## 1. Project Overview
+
+The Grocery Inventory Management System is a dynamic web application designed to streamline the inventory and employee management processes for a grocery store. Built with a robust Java Servlet backend and a modern JavaScript-powered frontend, this application provides a clear separation between business logic and user interface.
+
+The system features two distinct user portals, each tailored to a specific role:
+
+* **Admin Portal**: A comprehensive dashboard for administrators to oversee all aspects of the business. It provides full CRUD (Create, Read, Update, Delete) functionality for products, employees, and product categories, along with data analytics and export capabilities.
+* **Employee Portal**: A focused dashboard for employees to manage daily tasks. It includes a point-of-sale (POS) system for generating customer bills, viewing product stock, updating inventory levels, and managing purchase orders with suppliers.
+
+----------------------------------------
+
+## 2. How It Works: The Application Flow
+
+The application follows a modern client-server architecture:
+
+1.  **Frontend (Client)**: The user interacts with HTML pages (`AdminPortal.html`, `EmployeePortal.html`). All dynamic actions (like loading data or submitting a form) are handled by **JavaScript**.
+2.  **API Calls**: The JavaScript uses the `fetch()` API to make asynchronous requests to the Java backend. This means the page doesn't need to reload to get new data.
+3.  **Backend (Server)**: The **Java Servlets** act as the API endpoints. They receive requests from the frontend.
+4.  **Business Logic**: Servlets use **Data Access Objects (DAOs)** to handle all database operations. This keeps the database code separate and organized.
+5.  **Data Modeling**: **Model** classes (like `Employee.java`, `Product.java`) are used to structure the data retrieved from the database.
+6.  **Database**: The **MySQL** database stores all the application's data persistently.
+7.  **JSON Response**: The servlets use the **Gson** library to convert the Java data objects into JSON format, which is the standard language for APIs.
+8.  **UI Update**: The frontend JavaScript receives the JSON data and dynamically updates the HTML to display it to the user, completing the cycle.
+
+------------------------------------------
+
+## 3. Project Directory Structure
+
+The project is organized into a standard Maven/Gradle web application structure to ensure a clean separation of concerns.
+
+
+InventoryManagementSystem/
+│
+├── src/main/java/
+│   └── com/ims/
+│       ├── dao/          # Data Access Objects: Handles all SQL database operations.
+│       │   ├── EmployeeDao.java
+│       │   ├── ProductDao.java
+│       │   └── ...
+│       │
+│       ├── model/        # Model Classes: Plain Java Objects (POJOs) that represent data.
+│       │   ├── Employee.java
+│       │   ├── Product.java
+│       │   └── ...
+│       │
+│       ├── servlet/      # Servlets: Controllers that handle web requests and responses.
+│       │   ├── LoginServlet.java
+│       │   ├── GetAllProductsServlet.java
+│       │   └── ...
+│       │
+│       └── util/         # Utility Classes: For database connections and other helpers.
+│           └── DatabaseConnectionUtil.java
+│
+└── src/main/webapp/      # Contains all frontend files.
+├── AdminPortal.html
+├── EmployeePortal.html
+├── index.html
+├── admin-style.css
+└── ... (other HTML and CSS files)
+
+
+---
+
+## 4. Setup Guide
+
+Follow these steps to set up and run the project on a local machine.
+
+### Prerequisites
+* **Java Development Kit (JDK)**: Version 11 or higher.
+* **Apache Tomcat**: Version 10.1.
+* **MySQL Server & MySQL Workbench**: The database and a GUI tool to manage it.
+* **Eclipse IDE for Enterprise Java and Web Developers**.
+* **MySQL Connector/J**: The JDBC driver for MySQL (a `.jar` file).
+
+### Step 1: Database Setup
+1.  **Open MySQL Workbench** and connect to your local database server.
+2.  **Create and Run the Script**: Open a new query tab, paste the entire content from the `setup.sql` file provided with the project, and execute the script. This will create the `inventory_management` database, all necessary tables, and insert sample data.
+
+
+
+-------------------------------------------
+
+### Step 2: Configure Eclipse Project
+1.  **Import Project**: Open Eclipse and import the project folder (`File > Import > General > Existing Projects into Workspace`).
+2.  **Add Tomcat Server**:
+    * Go to the "Servers" tab (`Window > Show View > Servers`).
+    * Right-click, select `New > Server`, choose "Apache", and select "Tomcat v10.1 Server".
+    * Point it to your Tomcat installation directory.
+
+
+
+------------------------------------------------
+3.  **Add JDBC Driver**:
+    * Right-click on your project in the Project Explorer.
+    * Go to `Build Path > Configure Build Path`.
+    * In the "Libraries" tab, select "Classpath" and click "Add External JARs...".
+    * Navigate to and select the `mysql-connector-j-x.x.x.jar` file.
+
+----------------------------------------------------------
+
+
+4.  **Update Database Credentials**:
+    * Navigate to and open the `src/main/java/com/ims/util/DatabaseConnectionUtil.java` file.
+    * Modify the `JDBC_USERNAME` and `JDBC_PASSWORD` variables to match your MySQL root user credentials.
+
+### Step 3: Run the Application
+1.  **Clean Project**: It's good practice to clean the project first. Go to `Project > Clean...` and select your project.
+2.  **Run on Server**:
+    * Right-click on your project in the Project Explorer.
+    * Select **Run As > Run on Server**.
+    * Choose the Tomcat server you configured and click "Finish".
+3.  **Access the Application**: Eclipse will open a browser window to the application's homepage (`index.html`).
+
+You can now log in with the default credentials:
+* **Admin**: username `admin`, password `admin123`
+* **Employee**: username `employee`, password `employee123`
+or 
+* **Employee**: username `SakshamTalwar`, password `123456` or just add new employee (low security i know as of now)
+
+
+-----------------------------------------------------------
+
+## 5. Creating a Runnable Application (WAR File)
+
+To make the project easy to run for someone else (like your teacher), you can package it into a **WAR (Web Application Archive)** file. This is a single `.war` file that can be deployed on any Tomcat server.
+
+### Step 1: Export the WAR File from Eclipse
+1.  In Eclipse, right-click on your project in the **Project Explorer**.
+2.  Select **Export > WAR file**.
+3.  In the "Web project" dropdown, make sure your project is selected.
+4.  For the "Destination", click **Browse...** and choose a location to save the file (e.g., your Desktop). Name the file `InventoryManagementSystem.war`.
+5.  Click **Finish**.
+
+You will now have a single `InventoryManagementSystem.war` file. This file, along with the `setup.sql` script, is all your teacher needs.
+
+### Step 2: How to Run the WAR File (Instructions for your Teacher)
+To run the application, your teacher needs to have Tomcat and MySQL already set up.
+
+1.  **Set up the Database**: Run the `setup.sql` script in MySQL Workbench to create and populate the database.
+2.  **Start Tomcat**: Start the Tomcat server.
+3.  **Deploy the WAR file**:
+    * Navigate to the Tomcat installation directory on your computer.
+    * Find the `webapps` folder.
+    * **Copy and paste** the `InventoryManagementSystem.war` file directly into this `webapps` folder.
+4.  **Wait for Deployment**: Tomcat will automatically detect the new file and deploy it. This may take a few seconds. You will see a new folder named `InventoryManagementSystem` appear inside `webapps`.
+5.  **Access the Application**: Open a web browser and go to the following URL:
+    ```
+    http://localhost:8080/InventoryManagementSystem/
+    ```
+    *(Note: The port `8080` may be different if Tomcat is configured to use another port.)*
+
+The application will now be running directly from the server, without needing Eclipse.

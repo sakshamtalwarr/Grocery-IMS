@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Test</title>
+</head>
+<body>
+    <h1>Form Submission Test</h1>
+    <form id="testForm">
+        <input type="text" name="test_data" />
+        <button type="submit">Test Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            await fetch('TestServlet', { method: 'POST', body: formData });
+            alert('Test sent. Check the Eclipse console.');
+        });
+    </script>
+</body>
+</html>

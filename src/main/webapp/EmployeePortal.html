@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Employee Portal - Grocery IMS</title>
+    <link rel="stylesheet" href="admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container { position: relative; height: 400px; }
+        .topbar-right { display: flex; align-items: center; gap: 20px; }
+        .time-display { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+        #billing-interface { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .billing-section { display: flex; flex-direction: column; }
+        #bill-items-table { flex-grow: 1; display: block; max-height: 300px; overflow-y: auto; }
+        #billing-total { text-align: right; font-size: 24px; font-weight: 600; margin-top: 20px; color: var(--accent-success); }
+        #billing-controls .form-group, .modal-form .form-group { margin-bottom: 15px; }
+        #billing-controls label, .modal-form label { display: block; margin-bottom: 8px; font-weight: 500; }
+        #billing-controls input, #billing-controls select, .modal-form input, .modal-form select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-primary); }
+        #billing-controls button, .modal-form button { width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; border: none; border-radius: 8px; background-color: var(--accent-primary); color: white; cursor: pointer; }
+        .modal-body .btn-add-new { background-color: var(--accent-success); color: white; padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; margin-bottom: 20px; transition: background-color 0.2s ease; }
+        .modal-body .btn-add-new:hover { background-color: #2aaa7a; }
+        /* Style for the new Switch to Admin button */
+        .switch-button {
+            background-color: var(--accent-primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        .switch-button:hover {
+            background-color: #4f52e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <h1 class="system-title">Employee Portal</h1>
+        <div class="topbar-right">
+            <div class="time-display">
+                <span id="realTimeClock">--:--:-- --</span>
+            </div>
+            <!-- New "Switch to Admin" button -->
+            <a href="Adminlogin.html" class="switch-button">Switch to Admin</a>
+            <a href="index.html" class="logout-button">Logout</a>
+        </div>
+    </div>
+    <main class="main-container">
+        <div class="dashboard-header">
+            <h1 id="employee-welcome">Welcome, Employee!</h1>
+            <p id="dashboard-subtitle">Here are your tasks and inventory overview for today.</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="icon" style="color: var(--accent-primary);"><i class="fa-solid fa-boxes-stacked"></i></div><div class="info"><h3 id="statTotalProducts">--</h3><p>Products in Stock</p></div></div>
+            <div class="stat-card"><div class="icon" style="color: var(--accent-success);"><i class="fa-solid fa-receipt"></i></div><div class="info"><h3 id="statTodaySales">--</h3><p>My Sales Today</p></div></div>
+            <div class="stat-card"><div class="icon" style="color: var(--accent-warning);"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="info"><h3 id="statLowStock">--</h3><p>Low Stock Alerts</p></div></div>
+        </div>
+        <div class="dashboard-layout">
+            <div class="dashboard-card action-card" onclick="openModal('generateBill')"><i class="fa-solid fa-cash-register"></i><h3>Generate Customer Bill</h3></div>
+            <div class="dashboard-card action-card" onclick="openModal('viewProducts')"><i class="fa-solid fa-magnifying-glass"></i><h3>View Products</h3></div>
+            <div class="dashboard-card action-card" onclick="openModal('updateStock')"><i class="fa-solid fa-edit"></i><h3>Update Product Stock</h3></div>
+            <div class="dashboard-card action-card" onclick="openModal('supplierOrders')"><i class="fa-solid fa-truck-fast"></i><h3>Supplier Orders</h3></div>
+            <div class="dashboard-card action-card" onclick="openModal('myProfile')"><i class="fa-solid fa-user-circle"></i><h3>My Profile</h3></div>
+            <div class="dashboard-card chart-container"><h2>My Weekly Performance</h2><canvas id="performanceChart"></canvas></div>
+            <div class="dashboard-card">
+                <h2>Assigned Low Stock Items</h2>
+                <ul class="data-list" id="lowStockList"></ul>
+            </div>
+        </div>
+    </main>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-container" id="modalContainer">
+            <div class="modal-header"><h3 id="modalTitle"></h3><button class="modal-close-button" onclick="closeModal()">&times;</button></div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+   <script>
+    let currentBill = []; 
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadEmployeeDashboard();
+        initializeClock();
+    });
+
+    function initializeClock() {
+        const clockElement = document.getElementById('realTimeClock');
+        const clockOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' };
+        function updateClock() {
+            const now = new Date();
+            clockElement.textContent = `IST: ${now.toLocaleTimeString('en-IN', clockOptions)}`;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
+
+    async function loadEmployeeDashboard() {
+        try {
+            const response = await fetch('EmployeeDashboardServlet');
+            if (!response.ok) {
+                if (response.status === 401) {
+                    alert("Your session has expired. Please log in again.");
+                    window.location.href = "EmployeeLogin.html";
+                }
+                throw new Error('Failed to load dashboard data.');
+            }
+            const data = await response.json();
+            document.getElementById('employee-welcome').textContent = `Welcome, ${data.employeeName}!`;
+            document.getElementById('statTotalProducts').textContent = data.totalProducts;
+            document.getElementById('statTodaySales').textContent = data.todaySalesCount;
+            document.getElementById('statLowStock').textContent = data.lowStockCount;
+            const lowStockList = document.getElementById('lowStockList');
+            if(data.lowStockProducts && data.lowStockProducts.length > 0) {
+                lowStockList.innerHTML = data.lowStockProducts.map(p => `<li>${p.productName}<span class="quantity">${p.quantity} left</span></li>`).join('');
+            } else {
+                lowStockList.innerHTML = '<li>No low stock items.</li>';
+            }
+            renderPerformanceChart(data.weeklyPerformance);
+        } catch (error) {
+            console.error("Dashboard Load Error:", error);
+            document.getElementById('dashboard-subtitle').textContent = error.message;
+        }
+    }
+
+    function renderPerformanceChart(performanceData) {
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        if(window.myPerfChart) window.myPerfChart.destroy();
+        window.myPerfChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: performanceData.map(d => d.date),
+                datasets: [{
+                    label: 'Sales (₹)',
+                    data: performanceData.map(d => d.revenue),
+                    backgroundColor: 'rgba(52, 211, 153, 0.6)',
+                    borderColor: 'rgba(52, 211, 153, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { color: 'var(--text-secondary)' } }, x: { ticks: { color: 'var(--text-secondary)' } } } }
+        });
+    }
+
+    async function openModal(modalType, entityId = null) {
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        modalTitle.textContent = "Loading...";
+        modalBody.innerHTML = "";
+        modalOverlay.style.display = 'flex';
+
+        try {
+            if (modalType === 'generateBill') {
+                modalTitle.textContent = "Generate Customer Bill";
+                const response = await fetch('GetAllProductsServlet');
+                if (!response.ok) throw new Error('Failed to fetch products for billing.');
+                const products = await response.json();
+                let productOptions = products.filter(p => p.quantity > 0).map(p => `<option value="${p.productId}" data-price="${p.price}" data-stock="${p.quantity}">${p.productName} (Stock: ${p.quantity})</option>`).join('');
+                modalBody.innerHTML = `<div id="billing-interface"><div class="billing-section" id="billing-controls"><div class="form-group"><label for="product-select">Select Product</label><select id="product-select">${productOptions}</select></div><div class="form-group"><label for="product-quantity">Quantity</label><input type="number" id="product-quantity" value="1" min="1"></div><button onclick="addProductToBill()"><i class="fas fa-plus"></i> Add to Bill</button></div><div class="billing-section"><h3>Current Bill</h3><div id="bill-items-table"><table class="data-table"><thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr></thead><tbody id="bill-body"></tbody></table></div><div id="billing-total">Total: ₹0.00</div><button onclick="finalizeBill()" style="margin-top: 20px; background-color: var(--accent-success);">Finalize & Print Bill</button></div></div>`;
+                currentBill = [];
+            } else if (modalType === 'viewProducts') {
+                modalTitle.textContent = "View All Products";
+                const response = await fetch('GetAllProductsServlet');
+                if (!response.ok) throw new Error('Failed to fetch products.');
+                const products = await response.json();
+                let rows = products.map(p => `<tr><td>${p.productId}</td><td>${p.productName}</td><td>$${p.price.toFixed(2)}</td><td>${p.quantity}</td><td>${p.status}</td></tr>`).join('');
+                modalBody.innerHTML = `<div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Qty</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+            } else if (modalType === 'updateStock') {
+                modalTitle.textContent = "Update Product Stock";
+                const response = await fetch('GetAllProductsServlet');
+                if (!response.ok) throw new Error('Failed to fetch products.');
+                const products = await response.json();
+                let productOptions = products.map(p => `<option value="${p.productId}" data-stock="${p.quantity}">${p.productName}</option>`).join('');
+                modalBody.innerHTML = `<form id="updateStockForm" class="modal-form"><div class="form-group"><label for="product-select-update">Select Product</label><select id="product-select-update" name="productId" onchange="document.getElementById('current-stock').textContent = this.options[this.selectedIndex].getAttribute('data-stock') || 'N/A'"><option value="">-- Select a product --</option>${productOptions}</select></div><p style="margin-bottom: 15px;">Current Stock: <strong id="current-stock">N/A</strong></p><div class="form-group"><label for="new-quantity">New Stock Quantity</label><input type="number" id="new-quantity" name="newQuantity" min="0" required></div><button type="submit">Update Stock</button></form>`;
+                document.getElementById('updateStockForm').addEventListener('submit', handleUpdateStock);
+            } else if (modalType === 'supplierOrders') {
+                modalTitle.textContent = "Supplier Purchase Orders";
+                const response = await fetch('GetPurchaseOrdersServlet');
+                if (!response.ok) throw new Error('Failed to fetch purchase orders.');
+                const orders = await response.json();
+                const dateFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+                let rows = orders.map(o => `<tr><td>${o.purchaseOrderId}</td><td>${o.productName}</td><td>${o.quantityOrdered}</td><td>${o.supplierName || 'N/A'}</td><td>${new Date(o.orderDate).toLocaleDateString('en-IN', dateFormatOptions)}</td><td>${o.status}</td></tr>`).join('');
+                modalBody.innerHTML = `<button class="btn-add-new" onclick="openModal('placeNewOrder')"><i class="fas fa-plus"></i> Place New Order</button><div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Product</th><th>Qty Ordered</th><th>Supplier</th><th>Order Date</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+            } else if (modalType === 'placeNewOrder') {
+                modalTitle.textContent = "Place New Supplier Order";
+                const response = await fetch('GetAllProductsServlet');
+                if (!response.ok) throw new Error('Failed to fetch products.');
+                const products = await response.json();
+                let productOptions = products.map(p => `<option value="${p.productId}">${p.productName}</option>`).join('');
+                modalBody.innerHTML = `<form id="placeOrderForm" class="modal-form"><div class="form-group"><label for="product-select-order">Product</label><select id="product-select-order" name="productId" required>${productOptions}</select></div><div class="form-group"><label>Quantity to Order</label><input type="number" name="quantity" min="1" required></div><div class="form-group"><label>Supplier Name</label><input type="text" name="supplierName" required></div><div class="form-group"><label>Expected Delivery Date</label><input type="date" name="expectedDelivery" required></div><button type="submit">Submit Order</button></form>`;
+                document.getElementById('placeOrderForm').addEventListener('submit', handlePlaceNewOrder);
+            } else if (modalType === 'myProfile') {
+                modalTitle.textContent = "My Profile";
+                const response = await fetch('GetMyDetailsServlet');
+                if (!response.ok) throw new Error('Failed to fetch your profile details.');
+                const emp = await response.json();
+                modalBody.innerHTML = `<form id="updateMyProfileForm" class="modal-form"><div class="form-group"><label>Full Name</label><input type="text" name="name" value="${emp.name}" required></div><div class="form-group"><label>Email</label><input type="email" name="email" value="${emp.email}" required></div><div class="form-group"><label>Phone</label><input type="tel" name="phone_number" value="${emp.phoneNumber}" required></div><div class="form-group"><label>Username (Read-only)</label><input type="text" value="${emp.username}" disabled></div><div class="form-group"><label>Role (Read-only)</label><input type="text" value="${emp.role}" disabled></div><button type="submit">Update My Details</button></form>`;
+                document.getElementById('updateMyProfileForm').addEventListener('submit', handleUpdateMyProfile);
+            }
+        } catch (error) {
+            modalBody.innerHTML = `<p style="color:var(--accent-danger);">${error.message}</p>`;
+        }
+    }
+    
+    async function handleUpdateMyProfile(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        try {
+            const response = await fetch('UpdateMyProfileServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+            alert(result.message);
+            closeModal();
+            loadEmployeeDashboard();
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    }
+
+    function addProductToBill() {
+        const productSelect = document.getElementById('product-select');
+        const quantityInput = document.getElementById('product-quantity');
+        const productId = parseInt(productSelect.value);
+        const quantity = parseInt(quantityInput.value);
+        if (!productId || !quantity || quantity < 1) { alert("Please select a product and enter a valid quantity."); return; }
+        const selectedOption = productSelect.options[productSelect.selectedIndex];
+        const price = parseFloat(selectedOption.getAttribute('data-price'));
+        const maxStock = parseInt(selectedOption.getAttribute('data-stock'));
+        const productName = selectedOption.text.split(' (')[0];
+        if (quantity > maxStock) { alert(`Error: Not enough stock. Only ${maxStock} available.`); return; }
+        const existingItem = currentBill.find(item => item.id === productId);
+        if (existingItem) {
+            if (existingItem.qty + quantity > maxStock) { alert(`Error: Not enough stock. You have ${existingItem.qty} in the bill already and only ${maxStock} are available.`); return; }
+            existingItem.qty += quantity;
+        } else {
+            currentBill.push({ id: productId, name: productName, qty: quantity, price: price });
+        }
+        updateBillTable();
+    }
+
+    function updateBillTable() {
+        const billBody = document.getElementById('bill-body');
+        let total = 0;
+        billBody.innerHTML = currentBill.map((item, index) => {
+            const itemTotal = item.qty * item.price;
+            total += itemTotal;
+            return `<tr><td>${item.name}</td><td>${item.qty}</td><td>₹${item.price.toFixed(2)}</td><td>₹${itemTotal.toFixed(2)}</td><td><button class="action-btn delete" onclick="removeFromBill(${index})"><i class="fas fa-times"></i></button></td></tr>`;
+        }).join('');
+        document.getElementById('billing-total').textContent = `Total: ₹${total.toFixed(2)}`;
+    }
+    
+    function removeFromBill(index) {
+        currentBill.splice(index, 1);
+        updateBillTable();
+    }
+    
+    async function handleUpdateStock(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        if (!formData.get('productId')) {
+            alert('Please select a product.');
+            return;
+        }
+        try {
+            const response = await fetch('UpdateStockServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+            alert(result.message);
+            closeModal();
+            loadEmployeeDashboard();
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    }
+    
+    async function handlePlaceNewOrder(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        try {
+            const response = await fetch('PlacePurchaseOrderServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+            alert(result.message);
+            closeModal();
+            openModal('supplierOrders');
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    }
+
+    function finalizeBill() {
+        if (currentBill.length === 0) { alert("Cannot finalize an empty bill."); return; }
+        alert("Bill finalized! (This would normally be sent to the server and printed).");
+        closeModal();
+    }
+
+    function closeModal() {
+        document.getElementById('modalOverlay').style.display = 'none';
+    }
+   </script>
+</body>
+</html>

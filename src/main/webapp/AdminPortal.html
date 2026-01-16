@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin Dashboard - Grocery IMS</title>
+    <link rel="stylesheet" href="admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container { position: relative; height: 400px; }
+        .modal-body .btn-add-new { background-color: var(--accent-success); color: white; padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; margin-bottom: 20px; transition: background-color 0.2s ease; }
+        .modal-body .btn-add-new:hover { background-color: #2aaa7a; }
+        .modal-form .form-group { margin-bottom: 15px; text-align: left; }
+        .modal-form label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-secondary); font-size: 14px; }
+        .modal-form input, .modal-form select, .modal-form textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-primary); font-size: 16px; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        .modal-form input:focus, .modal-form select:focus, .modal-form textarea:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4); }
+        .modal-form button[type="submit"] { width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; font-weight: 600; border: none; border-radius: 8px; background-color: var(--accent-primary); color: white; cursor: pointer; transition: background-color 0.2s ease; }
+        .modal-form button[type="submit"]:hover { background-color: #4f52e0; }
+        .topbar-right { display: flex; align-items: center; gap: 20px; }
+        .time-display { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+        .export-button-small { background-color: var(--accent-success); color: white; padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: background-color 0.2s ease; }
+        .export-button-small:hover { background-color: #2aaa7a; }
+        .employee-photo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <h1 class="system-title">Grocery IMS</h1>
+        <div class="topbar-right">
+            <div class="time-display">
+                <span id="realTimeClock">--:--:-- --</span> | <span id="loginTime">Logged in at --:--</span>
+            </div>
+            <button class="export-button-small" onclick="exportData('products')"><i class="fa-solid fa-file-export"></i> Export</button>
+            <a href="index.html" class="logout-button">Logout</a>
+        </div>
+    </div>
+    <main class="main-container">
+        <div class="dashboard-header">
+            <h1>Admin Dashboard</h1>
+            <p id="dashboard-subtitle">Welcome back! Here's an overview of your inventory system.</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="icon" style="color: var(--accent-primary);"><i class="fa-solid fa-boxes-stacked"></i></div><div class="info"><h3 id="statTotalProducts">--</h3><p>Total Products</p></div></div>
+            <div class="stat-card"><div class="icon" style="color: var(--accent-success);"><i class="fa-solid fa-users"></i></div><div class="info"><h3 id="statTotalEmployees">--</h3><p>Total Employees</p></div></div>
+            <div class="stat-card"><div class="icon" style="color: var(--accent-secondary);"><i class="fa-solid fa-tags"></i></div><div class="info"><h3 id="statTotalCategories">--</h3><p>Product Categories</p></div></div>
+            <div class="stat-card"><div class="icon" style="color: var(--accent-warning);"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="info"><h3 id="statLowStock">--</h3><p>Low Stock Alerts</p></div></div>
+        </div>
+        <div class="dashboard-layout">
+            <div class="dashboard-card action-card" onclick="openModal('viewProducts')"><i class="fa-solid fa-box-open"></i><h3>Manage Products</h3></div>
+            <div class="dashboard-card action-card" onclick="openModal('viewEmployees')"><i class="fa-solid fa-users-cog"></i><h3>Manage Employees</h3></div>
+            <div class="dashboard-card action-card" onclick="openModal('viewCategories')"><i class="fa-solid fa-folder-open"></i><h3>Manage Categories</h3></div>
+            <div class="dashboard-card chart-container"><h2>Daily Sales Revenue</h2><canvas id="salesChart"></canvas></div>
+            <div class="dashboard-card"><h2>Low Stock Items</h2><ul class="data-list" id="lowStockList"></ul></div>
+        </div>
+    </main>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-container" id="modalContainer">
+            <div class="modal-header"><h3 id="modalTitle"></h3><button class="modal-close-button" onclick="closeModal()">&times;</button></div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDashboardData();
+        initializeSessionTimeAndClock();
+    });
+
+    function initializeSessionTimeAndClock() {
+        const loginTime = new Date();
+        const loginTimeOptions = { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' };
+        document.getElementById('loginTime').textContent = `Logged in at: ${loginTime.toLocaleTimeString('en-IN', loginTimeOptions)}`;
+        const clockElement = document.getElementById('realTimeClock');
+        const clockOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' };
+        function updateClock() {
+            const now = new Date();
+            clockElement.textContent = `IST: ${now.toLocaleTimeString('en-IN', clockOptions)}`;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
+
+    async function loadDashboardData() {
+        try {
+            const response = await fetch('DashboardStatsServlet');
+            if (!response.ok) throw new Error('Failed to fetch dashboard data.');
+            const data = await response.json();
+            document.getElementById('statTotalProducts').textContent = data.totalProducts;
+            document.getElementById('statTotalEmployees').textContent = data.totalEmployees;
+            document.getElementById('statTotalCategories').textContent = data.totalCategories;
+            document.getElementById('statLowStock').textContent = data.lowStock;
+            const lowStockList = document.getElementById('lowStockList');
+            if (data.lowStockProducts && data.lowStockProducts.length > 0) {
+                lowStockList.innerHTML = data.lowStockProducts.map(p => `<li>${p.productName}<span class="quantity">${p.quantity} left</span></li>`).join('');
+            } else {
+                lowStockList.innerHTML = `<li>No low stock items. Great job!</li>`;
+            }
+            renderSalesChart(data.sales);
+        } catch (error) {
+            console.error("Dashboard Load Error:", error);
+            document.getElementById('dashboard-subtitle').innerHTML += `<p style="color:var(--accent-danger);">${error.message}</p>`;
+        }
+    }
+
+    function renderSalesChart(salesData) {
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        if(window.mySalesChart) window.mySalesChart.destroy();
+        window.mySalesChart = new Chart(ctx, {
+            type: 'line', data: { labels: salesData.map(d => new Date(d.date).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})), datasets: [{ label: 'Revenue', data: salesData.map(d => d.revenue), borderColor: 'rgba(99, 102, 241, 1)', backgroundColor: 'rgba(99, 102, 241, 0.2)', fill: true, tension: 0.4 }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { ticks: { color: 'var(--text-secondary)' } }, x: { ticks: { color: 'var(--text-secondary)' } } } }
+        });
+    }
+
+    async function openModal(modalType, entityId = null) {
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        modalTitle.textContent = "Loading...";
+        modalBody.innerHTML = "";
+        modalOverlay.style.display = 'flex';
+
+        try {
+            if (modalType === 'viewProducts') {
+                modalTitle.textContent = "Manage Products";
+                const response = await fetch('GetAllProductsServlet');
+                if (!response.ok) throw new Error('Failed to fetch products.');
+                const products = await response.json();
+                let rows = products.map(p => `<tr><td>${p.productId}</td><td>${p.productName}</td><td>$${p.price.toFixed(2)}</td><td>${p.quantity}</td><td>${p.status}</td><td><button class="action-btn edit" onclick="openModal('editProduct', ${p.productId})"><i class="fas fa-edit"></i></button><button class="action-btn delete" onclick="handleDeleteProduct(${p.productId})"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+                modalBody.innerHTML = `<button class="btn-add-new" onclick="openModal('addProduct')"><i class="fas fa-plus"></i> Add New Product</button><div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Qty</th><th>Status</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+            } else if (modalType === 'addProduct') {
+                modalTitle.textContent = "Add New Product";
+                const response = await fetch('GetProductFormDataServlet');
+                if (!response.ok) throw new Error('Failed to fetch form data.');
+                const formData = await response.json();
+                let categoryOptions = formData.categories.map(c => `<option value="${c.categoryId}">${c.categoryName}</option>`).join('');
+                let brandOptions = formData.brands.map(b => `<option value="${b.brandId}">${b.brandName}</option>`).join('');
+                modalBody.innerHTML = `<form id="addProductForm" class="modal-form"><div class="form-group"><label>Product Name</label><input type="text" name="productName" required></div><div class="form-group"><label>Description</label><textarea name="description" rows="3"></textarea></div><div class="form-group"><label>Price</label><input type="number" name="price" step="0.01" required></div><div class="form-group"><label>Quantity</label><input type="number" name="quantity" required></div><div class="form-group"><label>Category</label><select name="categoryId" required>${categoryOptions}</select></div><div class="form-group"><label>Brand</label><select name="brandId" required>${brandOptions}</select></div><button type="submit">Add Product</button></form>`;
+                document.getElementById('addProductForm').addEventListener('submit', handleAddProduct);
+            } else if (modalType === 'editProduct') {
+                modalTitle.textContent = "Edit Product Details";
+                const [productRes, formDataRes] = await Promise.all([ fetch(`GetProductDetailsServlet?productId=${entityId}`), fetch('GetProductFormDataServlet') ]);
+                if (!productRes.ok) throw new Error('Failed to fetch product details.');
+                if (!formDataRes.ok) throw new Error('Failed to fetch form data.');
+                const product = await productRes.json();
+                const formData = await formDataRes.json();
+                let categoryOptions = formData.categories.map(c => `<option value="${c.categoryId}" ${c.categoryId === product.categoryId ? 'selected' : ''}>${c.categoryName}</option>`).join('');
+                let brandOptions = formData.brands.map(b => `<option value="${b.brandId}" ${b.brandId === product.brandId ? 'selected' : ''}>${b.brandName}</option>`).join('');
+                modalBody.innerHTML = `<form id="updateProductForm" class="modal-form"><input type="hidden" name="productId" value="${product.productId}"><div class="form-group"><label>Product Name</label><input type="text" name="productName" value="${product.productName}" required></div><div class="form-group"><label>Description</label><textarea name="description" rows="3">${product.description || ''}</textarea></div><div class="form-group"><label>Price</label><input type="number" name="price" step="0.01" value="${product.price}" required></div><div class="form-group"><label>Quantity</label><input type="number" name="quantity" value="${product.quantity}" required></div><div class="form-group"><label>Category</label><select name="categoryId" required>${categoryOptions}</select></div><div class="form-group"><label>Brand</label><select name="brandId" required>${brandOptions}</select></div><div class="form-group"><label>Image Path</label><input type="text" name="imagePath" value="${product.imagePath || ''}"></div><div class="form-group"><label>Status</label><select name="status" required><option value="Available" ${product.status === 'Available' ? 'selected' : ''}>Available</option><option value="Unavailable" ${product.status === 'Unavailable' ? 'selected' : ''}>Unavailable</option></select></div><button type="submit">Save Changes</button></form>`;
+                document.getElementById('updateProductForm').addEventListener('submit', handleUpdateProduct);
+            } else if (modalType === 'viewEmployees') {
+                modalTitle.textContent = "Manage Employees";
+                const response = await fetch('GetAllEmployeesServlet');
+                if (!response.ok) throw new Error('Failed to fetch employees.');
+                const employees = await response.json();
+                let rows = employees.map(emp => `<tr><td><img src="${emp.photoUrl || 'https://i.pravatar.cc/40?u=' + emp.employeeId}" alt="Photo" class="employee-photo" onerror="this.onerror=null;this.src='https://i.pravatar.cc/40';"></td><td>${emp.employeeId}</td><td>${emp.name}</td><td>${emp.email}</td><td>₹${new Intl.NumberFormat('en-IN').format(emp.salary)}</td><td>${emp.role}</td><td><button class="action-btn edit" onclick="openModal('editEmployee', ${emp.employeeId})"><i class="fas fa-edit"></i></button><button class="action-btn delete" onclick="handleDeleteEmployee(${emp.employeeId})"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+                modalBody.innerHTML = `<button class="btn-add-new" onclick="openModal('addEmployee')"><i class="fas fa-plus"></i> Add New Employee</button><div class="table-responsive"><table class="data-table"><thead><tr><th>Photo</th><th>ID</th><th>Name</th><th>Email</th><th>Salary</th><th>Role</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+            } else if (modalType === 'addEmployee') {
+                 modalTitle.textContent = "Add New Employee";
+                 modalBody.innerHTML = `<form id="addEmployeeForm" class="modal-form"><div class="form-group"><label>Full Name</label><input type="text" name="name" required></div><div class="form-group"><label>Username</label><input type="text" name="username" required></div><div class="form-group"><label>Email</label><input type="email" name="email" required></div><div class="form-group"><label>Password</label><input type="password" name="password" required></div><div class="form-group"><label>Phone</label><input type="tel" name="phone_number" required></div><div class="form-group"><label>Salary</label><input type="number" name="salary" step="1" value="0" required></div><div class="form-group"><label>Photo URL (Optional)</label><input type="text" name="photo_url" placeholder="https://example.com/photo.jpg"></div><div class="form-group"><label>Role</label><select name="role" required><option value="Employee">Employee</option><option value="Admin">Admin</option></select></div><button type="submit">Create Employee</button></form>`;
+                 document.getElementById('addEmployeeForm').addEventListener('submit', handleAddEmployee);
+            } else if (modalType === 'editEmployee') {
+                modalTitle.textContent = "Edit Employee Details";
+                const response = await fetch(`GetEmployeeDetailsServlet?employeeId=${entityId}`);
+                if (!response.ok) throw new Error('Failed to fetch employee details.');
+                const emp = await response.json();
+                modalBody.innerHTML = `<form id="updateEmployeeForm" class="modal-form"><input type="hidden" name="employeeId" value="${emp.employeeId}"><div class="form-group"><label>Full Name</label><input type="text" name="name" value="${emp.name}" required></div><div class="form-group"><label>Email</label><input type="email" name="email" value="${emp.email}" required></div><div class="form-group"><label>Phone</label><input type="tel" name="phone_number" value="${emp.phoneNumber}" required></div><div class="form-group"><label>Salary</label><input type="number" name="salary" step="1" value="${emp.salary}" required></div><div class="form-group"><label>Photo URL</label><input type="text" name="photo_url" value="${emp.photoUrl || ''}"></div><div class="form-group"><label>Role</label><select name="role" required><option value="Employee" ${emp.role === 'Employee' ? 'selected' : ''}>Employee</option><option value="Admin" ${emp.role === 'Admin' ? 'selected' : ''}>Admin</option></select></div><div class="form-group"><label>Status</label><select name="status" required><option value="Active" ${emp.status === 'Active' ? 'selected' : ''}>Active</option><option value="Inactive" ${emp.status === 'Inactive' ? 'selected' : ''}>Inactive</option></select></div><button type="submit">Save Changes</button></form>`;
+                document.getElementById('updateEmployeeForm').addEventListener('submit', handleUpdateEmployee);
+            } else if (modalType === 'viewCategories') {
+                modalTitle.textContent = "Manage Categories";
+                const response = await fetch('GetAllCategoriesServlet');
+                if (!response.ok) throw new Error('Failed to fetch categories.');
+                const categories = await response.json();
+                let rows = categories.map(c => `<tr><td>${c.categoryId}</td><td>${c.categoryName}</td><td><button class="action-btn delete" onclick="handleDeleteCategory(${c.categoryId})"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+                modalBody.innerHTML = `<form id="addCategoryForm" class="modal-form" style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;"><input type="text" name="categoryName" placeholder="New category name..." required style="flex-grow: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-primary);"><button type="submit" class="btn-add-new" style="margin-bottom: 0;"><i class="fas fa-plus"></i> Add</button></form><div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+                document.getElementById('addCategoryForm').addEventListener('submit', handleAddCategory);
+            } else {
+                modalTitle.textContent = "Coming Soon";
+                modalBody.innerHTML = `<p>This feature is under development.</p>`;
+            }
+        } catch (error) {
+            modalBody.innerHTML = `<p style="color:var(--accent-danger);">${error.message}</p>`;
+        }
+    }
+
+    async function handleAddProduct(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        try {
+            const response = await fetch('AddProductServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (response.ok) { alert(result.message); closeModal(); loadDashboardData(); } 
+            else { throw new Error(result.message); }
+        } catch (error) { alert(`Error: ${error.message}`); }
+    }
+    
+    async function handleUpdateProduct(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        try {
+            const response = await fetch('UpdateProductServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+            alert(result.message);
+            closeModal();
+            openModal('viewProducts');
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    }
+
+    async function handleAddEmployee(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        try {
+            const response = await fetch('AddEmployeeServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (response.ok) { alert(result.message); closeModal(); loadDashboardData(); } 
+            else { throw new Error(result.message); }
+        } catch (error) { alert(`Error: ${error.message}`); }
+    }
+    
+    async function handleUpdateEmployee(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        try {
+            const response = await fetch('UpdateEmployeeServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+            alert(result.message);
+            closeModal();
+            openModal('viewEmployees');
+        } catch (error) { alert(`Error: ${error.message}`); }
+    }
+    
+    async function handleAddCategory(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        try {
+            const response = await fetch('AddCategoryServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (response.ok) { alert(result.message); openModal('viewCategories'); loadDashboardData(); } 
+            else { throw new Error(result.message); }
+        } catch (error) { alert(`Error: ${error.message}`); }
+    }
+
+    async function handleDeleteProduct(productId) {
+        if (!confirm(`Are you sure you want to delete product ID ${productId}?`)) return;
+        try {
+            const formData = new FormData();
+            formData.append('productId', productId);
+            const response = await fetch('DeleteProductServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+            alert(result.message);
+            openModal('viewProducts');
+            loadDashboardData();
+        } catch (error) { alert(`Error: ${error.message}`); }
+    }
+
+    async function handleDeleteEmployee(employeeId) {
+        if (!confirm(`Are you sure you want to delete employee with ID ${employeeId}?`)) return;
+        try {
+            const formData = new FormData();
+            formData.append('employeeId', employeeId);
+            const response = await fetch('DeleteEmployeeServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (response.ok) { alert(result.message); openModal('viewEmployees'); loadDashboardData(); } 
+            else { throw new Error(result.message); }
+        } catch (error) { alert(`Error: ${error.message}`); }
+    }
+
+    async function handleDeleteCategory(categoryId) {
+        if (!confirm(`Delete category ID ${categoryId}? This may fail if products are using it.`)) return;
+        try {
+            const formData = new FormData();
+            formData.append('categoryId', categoryId);
+            const response = await fetch('DeleteCategoryServlet', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+            alert(result.message);
+            openModal('viewCategories');
+            loadDashboardData();
+        } catch (error) { alert(`Error: ${error.message}`); }
+    }
+    
+    function exportData(dataType) {
+        if (confirm(`Export all ${dataType} data as a CSV file?`)) {
+            window.location.href = `ExportDataServlet?type=${dataType}`;
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('modalOverlay').style.display = 'none';
+    }
+   </script>
+</body>
+</html>
